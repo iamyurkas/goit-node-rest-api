@@ -3,7 +3,6 @@ import path from "path";
 import { nanoid } from "nanoid";
 
 import Contact from "../db/models/Contact.js";
-import { log } from "console";
 
 const contactsPath = path.resolve("db", "contacts.json");
 const updateContacts = (contacts) =>
@@ -31,12 +30,6 @@ export async function removeContact(contactId) {
 }
 
 export async function addContact(data) {
-  //   const contacts = await listContacts();
-  //   const newContact = { id: nanoid(), name, email, phone };
-  //   contacts.push(newContact);
-
-  //   await updateContacts(contacts);
-  //   return newContact;
   return Contact.create(data);
 }
 
