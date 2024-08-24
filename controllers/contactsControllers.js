@@ -4,6 +4,7 @@ import {
   createContactSchema,
   updateContactSchema,
 } from "../schemas/contactsSchemas.js";
+import ctrlWrapper from "../helpers/ctrlWrapper.js";
 
 export const getAllContacts = async (req, res, next) => {
   try {
@@ -70,4 +71,34 @@ export const updateContact = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+export const updateFavoriteStatus = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { favorite } = req.body;
+
+    if (typeof favorite !== "boolean") {
+      throw HttpError(400, 'Field "favorite" must be a boolean');
+    }
+
+    const result = await contactsService.updateStatusContact(id, { favorite });
+
+    if (!result) {
+      throw HttpError(404);
+    }
+
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export default {
+  getAllContacts: ctrlWrapper(getAllContacts),
+  getOneContact: ctrlWrapper(getOneContact),
+  deleteContact: ctrlWrapper(deleteContact),
+  createContact: ctrlWrapper(createContact),
+  updateContact: ctrlWrapper(updateContact),
+  updateFavoriteStatus: ctrlWrapper(updateFavoriteStatus),
 };
