@@ -8,7 +8,7 @@ import HttpError from "../helpers/HttpError.js";
 const { JWT_SECRET } = process.env;
 
 const signup = async (req, res) => {
-  const user = await usersService.createUser(req.body);
+  const user = await authServices.signup(req.body);
   res.status(201).json({
     user: {
       email: user.email,
@@ -19,7 +19,7 @@ const signup = async (req, res) => {
 
 const signin = async (req, res) => {
   const { email, password } = req.body;
-  const user = await usersService.getByEmail(email);
+  const user = await authServices.findUser({ email });
   if (!user) {
     throw HttpError(401, "Email or password is wrong");
   }
@@ -33,7 +33,7 @@ const signin = async (req, res) => {
   };
 
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "24h" });
-  usersService.updateUser(user.id, { token });
+  authServices.updateUser(user.id, { token });
 
   res.json({
     token,
@@ -46,7 +46,7 @@ const signin = async (req, res) => {
 
 const signout = async (req, res, next) => {
   const { id } = req.user;
-  await usersService.updateUser(id, { token: null });
+  await authServices.updateUser(id, { token: null });
   res.status(204).send();
 };
 
