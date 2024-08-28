@@ -7,7 +7,7 @@ import upload from "../middleware/upload.js";
 
 import validateBody from "../helpers/validateBody.js";
 
-import { authSignupSchemas } from "../schemas/authSchemas.js";
+import { authSignupSchemas, emailSchema } from "../schemas/authSchemas.js";
 
 const signupMiddleware = validateBody(authSignupSchemas);
 
@@ -22,6 +22,14 @@ authRouter.patch(
   authenticate,
   upload.single("avatar"),
   authControllers.updateAvatar
+);
+
+authRouter.get("/verify/:verificationToken", authControllers.verifyEmail);
+
+authRouter.post(
+  "/verify",
+  validateBody(emailSchema),
+  authControllers.reverifyEmail
 );
 
 export default authRouter;
