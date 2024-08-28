@@ -1,10 +1,7 @@
 import bcrypt from "bcrypt";
 import User from "../db/models/User.js";
 
-export const findUser = (query) =>
-  User.findOne({
-    where: query,
-  });
+export const findUser = (query) => User.findOne({ query });
 
 export const signup = async (data) => {
   try {
@@ -22,7 +19,6 @@ export const signup = async (data) => {
 
 export const updateUser = async (query, data) => {
   const user = await findUser(query);
-  console.log("user", query.id);
   if (!user) {
     return null;
   }
